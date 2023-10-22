@@ -1,5 +1,4 @@
 import boto3
-import json
 import os
 from boto3.dynamodb.conditions import Key
 from dynamodb_json import json_util
@@ -13,4 +12,4 @@ def lambda_handler(event, context):
         KeyConditionExpression=Key('PK').eq('Team'),
         ExpressionAttributeNames = {'#n': 'Name'}
     )
-    return {'statusCode': 200, 'body':json.dumps(json_util.loads(response['Items']))}
+    return {'statusCode': 200, 'body':json_util.loads(response['Items'])}
