@@ -13,7 +13,4 @@ def lambda_handler(event, context):
         KeyConditionExpression=Key('PK').eq('Team'),
         ExpressionAttributeNames = {'#n': 'Name'}
     )
-    teams = response['Items']
-    for team in teams:
-        team['TeamId']=int(team['TeamId'])
     return {'statusCode': 200, 'body':json.dumps(json_util.loads(response['Items']))}
