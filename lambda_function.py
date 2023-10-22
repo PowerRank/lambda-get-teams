@@ -1,9 +1,18 @@
+import boto3
 import json
+import os
+from boto3.dynamodb.conditions import Key
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table(os.environ['TABLE_NAME'])
 
 def lambda_handler(event, context):
-    # TODO implement
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Hello from Lambda 2!')
-    }
-
+    response = table.query(
+        ProjectionExpression='TeamId,#n',
+        KeyConditionExpression=Key('PK').eq('Team'),
+        ExpressionAttributeNames = {'#n': 'Name'}
+    )
+    teams = response['Items']
+    for team in teams:
+        team['TeamId']=int(team['TeamId'])
+    return {'statusCode': 200, 'body':json.dumps(teams)}
