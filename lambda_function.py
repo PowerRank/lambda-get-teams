@@ -8,7 +8,7 @@ def lambda_handler(event, context):
         print("Executing Get Teams")
 
         print("Connecting to DynamoDb...")
-        dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
+        dynamodb = boto3.resource('dynamodb')
 
         print("Connecting to Table..")
         table = dynamodb.Table(os.environ['TABLE_NAME'])
