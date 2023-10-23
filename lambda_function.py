@@ -4,17 +4,31 @@ from boto3.dynamodb.conditions import Key
 from dynamodb_json import json_util
 
 def lambda_handler(event, context):
-    
     try:
-        dynamodb = boto3.resource('dynamodb')
+        print("Executing Get Teams")
+
+        print("Connecting to DynamoDb...")
+        dynamodb = boto3.resource('dynamodb', region_name="us-east-1")
+
+        print("Connecting to Table..")
         table = dynamodb.Table(os.environ['TABLE_NAME'])
+
+        print("Running teams query...")
         response = table.query(
             ProjectionExpression='TeamId,#n',
             KeyConditionExpression=Key('PK').eq('Team'),
             ExpressionAttributeNames = {'#n': 'Name'}
         )
-        return {'statusCode': 200, 'body':json_util.loads(response['Items'])}
+
+        print("Returning response...")
+        print(json_util.dumps(response['Items']))
+        return {
+            'statusCode': 200,
+            'body': json_util.dumps(response['Items'])
+        }
+        # return {'statusCode': 200, 'body':json_util.loads(response['Items'])}
     except Exception as e:
+        print("Exception Found...")
         print(e)
     finally:
         print('## ENVIRONMENT VARIABLES')
@@ -23,4 +37,7 @@ def lambda_handler(event, context):
         print(os.environ['TABLE_NAME'])
         print('## EVENT')
         print(event)
-    return{'statusCode': 500, 'body': 'Invalid request'}
+    return {
+            'statusCode': 200,
+            'body': json_util.dumps('Invalid Request')
+        }
