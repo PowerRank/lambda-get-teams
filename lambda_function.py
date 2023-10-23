@@ -13,11 +13,12 @@ def lambda_handler(event, context):
             ExpressionAttributeNames = {'#n': 'Name'}
         )
         return {'statusCode': 200, 'body':json_util.loads(response['Items'])}
-    except:
-        print('Something went wrong')
+    except Exception as e:
+        print(e)
     finally:
         print('## ENVIRONMENT VARIABLES')
         print(os.environ['AWS_LAMBDA_LOG_GROUP_NAME'])
         print(os.environ['AWS_LAMBDA_LOG_STREAM_NAME'])
+        print(os.environ['TABLE_NAME'])
         print('## EVENT')
         print(event)
