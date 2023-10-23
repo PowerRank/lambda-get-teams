@@ -4,9 +4,10 @@ from boto3.dynamodb.conditions import Key
 from dynamodb_json import json_util
 
 def lambda_handler(event, context):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(os.environ['TABLE_NAME'])
+    
     try:
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table(os.environ['TABLE_NAME'])
         response = table.query(
             ProjectionExpression='TeamId,#n',
             KeyConditionExpression=Key('PK').eq('Team'),
@@ -22,3 +23,4 @@ def lambda_handler(event, context):
         print(os.environ['TABLE_NAME'])
         print('## EVENT')
         print(event)
+    return{'statusCode': 500, 'body': 'Invalid request'}
